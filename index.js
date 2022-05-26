@@ -250,7 +250,7 @@ app.get('/reviews', async (req, res) => {
       const service = req.body;
       console.log(service)
       const price = service.price;
-      const amount = price*100;
+      const amount = parseInt(price) *100;
       const paymentIntent = await stripe.paymentIntents.create({
         amount : amount,
         currency: 'usd',
