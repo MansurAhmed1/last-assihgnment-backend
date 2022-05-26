@@ -76,9 +76,7 @@ async function run() {
   try {
     await client.connect();
     const serviceCollection = client.db('test').collection('testCollection');
-    const bookingCollection = client.db('test').collection('bookings');
     const userCollection = client.db('test').collection('userCollection');
-    // const doctorCollection = client.db('doctors_portal').collection('doctors');
     const paymentCollection = client.db('test').collection('PaymentCollection');
     const reviewCollection = client.db('test').collection('reviewCollection');
     const orderCollection = client.db('test').collection('orderCollection');
@@ -307,17 +305,6 @@ app.put("/order/update/:id", async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     app.get('/service', async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query)
@@ -429,138 +416,6 @@ app.get('/admin/:email', async(req, res) =>{
 ////////////////////login korar somoy user je token create kore oita ba useToken er jonno/////////////////
    
 
-
-// ////////////////////////////////////////////////booking sewar por slot set kora//////////////////////////////////
-
-//     // Warning: This is not the proper way to query multiple collection. 
-//     // After learning more about mongodb. use aggregate, lookup, pipeline, match, group
-//     app.get('/available', async (req, res) => {
-//       const date = req.query.date;
-
-//       // step 1:  get all services
-//       const services = await serviceCollection.find().toArray();
-
-//       // step 2: get the booking of that day. output: [{}, {}, {}, {}, {}, {}]
-//       const query = { date: date };
-//       const bookings = await bookingCollection.find(query).toArray();
-
-//       // step 3: for each service
-//       services.forEach(service => {
-//         // step 4: find bookings for that service. output: [{}, {}, {}, {}]
-//         const serviceBookings = bookings.filter(book => book.treatment === service.name);
-//         // step 5: select slots for the service Bookings: ['', '', '', '']
-//         const bookedSlots = serviceBookings.map(book => book.slot);
-//         // step 6: select those slots that are not in bookedSlots
-//         const available = service.slots.filter(slot => !bookedSlots.includes(slot));
-//         //step 7: set available to slots to make it easier 
-//         service.slots = available;
-//       });
-
-
-//       res.send(services);
-//     })
-// ////////////////////////////////////////////////booking dewar por slot set kora//////////////////////////////////
- 
-
-
-
-
-
-    /**
-     * API Naming Convention
-     * app.get('/booking') // get all bookings in this collection. or get more than one or by filter
-     * app.get('/booking/:id') // get a specific booking 
-     * app.post('/booking') // add a new booking
-     * app.patch('/booking/:id) //
-     * app.put('/booking/:id') // upsert ==> update (if exists) or insert (if doesn't exist)
-     * app.delete('/booking/:id) //
-    */
-
-
-
-// /////////////////////////////////////////booking er value newa ///////////////////////////////////////
-//     app.get('/booking', verifyJWT, async (req, res) => {
-//       const patient = req.query.patient;
-//       const decodedEmail = req.decoded.email;
-//       if (patient === decodedEmail) {
-//         const query = { patient: patient };
-//         const bookings = await bookingCollection.find(query).toArray();
-//         return res.send(bookings);
-//       }
-//       else {
-//         return res.status(403).send({ message: 'forbidden access' });
-//       }
-//     });
-// /////////////////////////////////////////booking er value newa ///////////////////////////////////////
-   
-
-
-
-// ///////////////////////id die booking product khoja///////////////////////////////////////////
-//     app.get('/booking/:id', verifyJWT, async(req, res) =>{
-//       const id = req.params.id;
-//       const query = {_id: ObjectId(id)};
-//       const booking = await bookingCollection.findOne(query);
-//       res.send(booking);
-//     })
-// ///////////////////////id die booking product khoja///////////////////////////////////////////
-
-
-
-
-// /////////////////////////////////////////booking  dewa/////////////////////////////////////////////////
-    // app.post('/booking', async (req, res) => {
-    //   const booking = req.body;
-    //   //qury er sobgula jodi match hoi tahole oitake find korbe
-    //   const query = { treatment: booking.treatment, date: booking.date, patient: booking.patient }
-    //   const exists = await bookingCollection.findOne(query);
-    //   //jodi pawa jai tahole pathabena
-    //   if (exists) {
-    //     return res.send({ success: false, booking: exists })
-    //   }
-    //   //jodi na pawa jai tahole pathabe
-    //   const result = await bookingCollection.insertOne(booking);
-    //   console.log('sending email');
-    //   sendAppointmentEmail(booking);
-    //   return res.send({ success: true, result });
-    // });
-// /////////////////////////////////////////booking  dewa/////////////////////////////////////////////////
- 
-
-
-
-
-
-
-
-//  //////////////////////////////doctor getkora/////////////////  
-//     app.get('/doctor', verifyJWT, verifyAdmin, async (req, res) => {
-//       const doctors = await doctorCollection.find().toArray();
-//       res.send(doctors);
-//     })
-//  //////////////////////////////doctor getkora/////////////////  
-
-
-
-
-//  //////////////doctor ke post kora/////////////////   
-//     app.post('/doctor', verifyJWT, verifyAdmin, async (req, res) => {
-//       const doctor = req.body;
-//       const result = await doctorCollection.insertOne(doctor);
-//       res.send(result);
-//     });
-//  //////////////doctor ke post kora/////////////////  
-
-
-
-
-// //////////////doctor ke delete kora/////////////////  
-//     app.delete('/doctor/:email', verifyJWT, verifyAdmin, async (req, res) => {
-//       const email = req.params.email;
-//       const filter = { email: email };
-//       const result = await doctorCollection.deleteOne(filter);
-//       res.send(result);
-//     })
 
   }
   finally {
