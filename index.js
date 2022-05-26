@@ -114,7 +114,9 @@ app.post("/reviews", async (req, res) => {
 
 
 
-
+app.get('/', (req, res) => {
+  res.send('Hello From Assihnmnet 12')
+})
 
 //////profile post
 app.post("/profile", async (req, res) => {
@@ -445,9 +447,7 @@ app.get('/admin/:email', async(req, res) =>{
 run().catch(console.dir);
 
 
-app.get('/', (req, res) => {
-  res.send('Hello From Assihnmnet 12')
-})
+
 
 app.listen(port, () => {
   console.log(`assihnmnet12 on port ${port}`)
