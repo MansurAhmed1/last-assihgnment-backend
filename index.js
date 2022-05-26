@@ -13,7 +13,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({origin:"*"}));
 app.use(express.json());
 
 
@@ -89,7 +89,7 @@ async function run() {
 
 app.post("/reviews", async (req, res) => {
   const newproduct = req.body;
-  console.log(newproduct)
+ 
   const result = await reviewCollection.insertOne(newproduct);
   res.send(result);
 });
@@ -103,7 +103,7 @@ app.post("/reviews", async (req, res) => {
 app.post("/profile", async (req, res) => {
   const newproduct = req.body;
  
-  console.log(newproduct)
+  
   const result = await profileColllection.insertOne(newproduct);
   res.send(result);
 });
@@ -113,7 +113,7 @@ app.post("/profile", async (req, res) => {
 
 app.get("/profile",  async (req, res) => {
   const email = req.query.email;
-   console.log(email);
+  
     const query = { email: email };
     const cursor = profileColllection.find(query);
     const  profileData= await cursor.toArray();
@@ -134,7 +134,7 @@ app.get("/profile",  async (req, res) => {
 
 app.post("/order", async (req, res) => {
   const order = req.body;
-  console.log(order)
+ 
   const result = await orderCollection.insertOne(order);
   res.send(result);
 });
@@ -145,7 +145,7 @@ app.post("/order", async (req, res) => {
 //////////your order
 app.get("/order",  async (req, res) => {
   const email = req.query.email;
-  console.log(email);
+ 
 
 
     const query = { email: email };
@@ -164,7 +164,7 @@ app.get("/order",  async (req, res) => {
 
 app.post("/added", async (req, res) => {
   const order = req.body;
-  console.log(order)
+  
   const result = await serviceCollection.insertOne(order);
   res.send(result);
 });
@@ -173,7 +173,7 @@ app.post("/added", async (req, res) => {
 
 app.delete("/delete/:id", async (req, res) => {
   const id = req.params.id;
-  console.log(id)
+  
   const query = { _id: ObjectId(id) };
   const result = await orderCollection.deleteOne(query);
   res.send(result);
@@ -186,7 +186,7 @@ app.delete("/delete/:id", async (req, res) => {
 
 app.delete("/deleteproduct/:id", async (req, res) => {
   const id = req.params.id;
-  console.log(id)
+ 
   const query = { _id: ObjectId(id) };
   const result = await serviceCollection.deleteOne(query);
   res.send(result);
@@ -248,7 +248,7 @@ app.get('/reviews', async (req, res) => {
 /////////////////////////card paument kora////////////////////////////////
     app.post('/create-payment-intent',async(req, res) =>{
       const service = req.body;
-      console.log(service)
+     
       const price = service.price;
       const amount = parseInt(price) *100;
       const paymentIntent = await stripe.paymentIntents.create({
@@ -289,7 +289,7 @@ app.put("/order/update/:id", async (req, res) => {
   const id = req.params.id;
  
   const updateOrder = req.body;
-  console.log(updateOrder);
+ 
   const filter = { _id: ObjectId(id) };
   const options = { upsert: true };
   const updatedDoc = {
