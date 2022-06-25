@@ -49,6 +49,7 @@ const client = new MongoClient(uri, {
 
 
 function  verifyJWT(req, res, next) {
+
   const authHeader = req.headers.authorization;
 
   console.log(authHeader)
@@ -404,8 +405,9 @@ app.get('/admin/:email', async(req, res) =>{
       const updateDoc = {
         $set: user,
       };
+  
       const result = await userCollection.updateOne(filter, updateDoc, options);
-      const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7day' })
+      const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '365day' })
       res.send({ result, token });
     });
     
