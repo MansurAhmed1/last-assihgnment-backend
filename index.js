@@ -1,7 +1,3 @@
-
-
-
-
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -54,6 +50,8 @@ const client = new MongoClient(uri, {
 
 function  verifyJWT(req, res, next) {
   const authHeader = req.headers.authorization;
+
+  console.log(authHeader)
   if (!authHeader) {
     return res.status(401).send({ message: "unauthorized access" });
   }
@@ -61,6 +59,7 @@ function  verifyJWT(req, res, next) {
   console.log(token)
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
+      console.log(err)
       return res.status(403).send({ message: "Forbidden access" });
     }
     console.log("decoded", decoded);
@@ -69,7 +68,7 @@ function  verifyJWT(req, res, next) {
   });
 }
 
-
+    
 
 
 
@@ -133,7 +132,7 @@ app.get("/profile",  async (req, res) => {
 
 
 
-app.post("/order", async (req, res) => {
+app.post("/order",verifyJWT, async (req, res) => {
   const order = req.body;
  
   const result = await orderCollection.insertOne(order);
@@ -182,7 +181,13 @@ app.delete("/delete/:id", async (req, res) => {
 
 
 
-
+app.delete("/deleteprofile/:id", async (req, res) => {
+  const id = req.params.id;
+  
+  const query = { _id: ObjectId(id) };
+  const result = await profileColllection.deleteOne(query);
+  res.send(result);
+});
 
 
 app.delete("/deleteproduct/:id", async (req, res) => {
@@ -194,23 +199,6 @@ app.delete("/deleteproduct/:id", async (req, res) => {
 });
 
 
-
-
-// app.get('/order', verifyJWT, async (req, res) => {
-//   const email = req.query.email;
-//   console.log(email)
-//   const decodedEmail = req.decoded.email;
-//   console.log(email)
-//   if (email === decodedEmail) {
-//     const query = { email: email };
-//     const order =  await orderCollection.find(query).toArray();;
-//     return res.send(order);
-//   }
-//   else {
-//     return res.status(403).send({ message: 'forbidden access' });
-//   }
-// });
-/////////////
 
 
 
@@ -266,7 +254,7 @@ app.get('/reviews', async (req, res) => {
 // ///////////////////payment korar somoy alada pruduct er payment kora//////////
 app.patch('/pay/:id',async(req, res) =>{
   const id  = req.params.id;
-  console.log(id)
+
   const payment = req.body;
   console.log(payment)
   const filter = {_id: ObjectId(id)};
@@ -377,7 +365,7 @@ app.get('/admin/:email', async(req, res) =>{
   const email = req.params.email;
   const user = await userCollection.findOne({email: email});
     const isAdmin = user?.role === 'admin';
-    console.log("admin",isAdmin)
+   
     res.send({admin: isAdmin})
 })
 ///////////////////////////////////[required admin] object er moddo role==admin hole true return korbe ebong jodi true return kore tahole ami koekta router sorto die dekhabo //////////////////////////////////////////////
@@ -391,7 +379,7 @@ app.get('/admin/:email', async(req, res) =>{
 ////////////////////////////////for admin nije chara keu dekhte parbena////////////////////////
     app.put('/user/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
       const email = req.params.email;
-      
+      console.log(verifyJWT)
       const filter = { email: email };
       const options = { upsert: true };
       const updateDoc = {
@@ -417,7 +405,7 @@ app.get('/admin/:email', async(req, res) =>{
         $set: user,
       };
       const result = await userCollection.updateOne(filter, updateDoc, options);
-      const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+      const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7day' })
       res.send({ result, token });
     });
     
